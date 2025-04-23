@@ -383,7 +383,7 @@ if (import.meta.main) {
       }
       // Otherwise, handle as an RPC request
       return handler(req, connInfo, appConfig);
-    }, { port: 8000 });
+    }, { port: 8000, hostname: "[::]" });
   } else {
     console.error("❌ Server could not start due to configuration errors.");
     Deno.exit(1); // Exit if config fails
