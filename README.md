@@ -15,7 +15,7 @@ This Deno project acts as a proxy for Ethereum JSON-RPC requests. It forwards in
 Configuration is managed via environment variables, typically loaded from a `.env` file.
 
 1.  **`RPC_CONFIG`**: (Required) A JSON string defining the network slugs and their corresponding upstream RPC endpoints.
-    *   Format: `{ "network_slug": [{ "url": "...", "authToken": "Bearer ..." }, ...], ... }`
+    *   Format: `'{ "network_slug": [{ "url": "...", "authToken": "Bearer ..." }, ...], ... }'`
     *   `network_slug`: The path segment used to identify the network (e.g., `mainnet`, `sepolia`).
     *   `url`: The full URL of the upstream RPC provider.
     *   `authToken` (Optional): A Bearer token to include in the `Authorization` header for requests to this specific upstream.
@@ -60,7 +60,7 @@ Ensure you have [Deno](https://deno.land/) installed.
     ```
 2.  **Run the server:**
     ```bash
-    deno run --allow-net --allow-env --allow-read main.ts
+    deno run --allow-net --allow-env --allow-read --env-file main.ts
     ```
     *   `--allow-net`: Required for listening for incoming requests and making outgoing RPC calls.
     *   `--allow-env`: Required to read environment variables (including `.env`).

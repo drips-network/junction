@@ -1,5 +1,4 @@
 import { serve, ConnInfo } from "https://deno.land/std@0.182.0/http/server.ts";
-import { load } from "dotenv";
 import { z } from "zod";
 // Use prom-client via npm specifier
 import client from "npm:prom-client";
@@ -59,14 +58,13 @@ export interface AppConfig {
   rateLimit: RateLimitConfig;
 }
 
-export async function loadAppConfig(): Promise<AppConfig | null> {
+export function loadAppConfig(): AppConfig | null {
   try {
     // Load .env file, allowing override by actual environment variables
-    const env = await load({ export: true });
-    const configJson = env["RPC_CONFIG"];
-    const bypassToken = env["INTERNAL_AUTH_TOKEN"] || null; // Allow empty/missing token
-    const rateLimitEnabled = env["PUBLIC_RATE_LIMIT_ENABLED"]?.toLowerCase() === "true";
-    const rateLimitRpmStr = env["PUBLIC_RATE_LIMIT_RPM"];
+    const configJson = Deno.env.get("RPC_CONFIG");
+    const bypassToken = Deno.env.get("INTERNAL_AUTH_TOKEN") || null; // Allow empty/missing token
+    const rateLimitEnabled = Deno.env.get("PUBLIC_RATE_LIMIT_ENABLED")?.toLowerCase() === "true";
+    const rateLimitRpmStr = Deno.env.get("PUBLIC_RATE_LIMIT_RPM");
     let rateLimitRpm = 60; // Default RPM
 
     if (!configJson) {
@@ -309,7 +307,7 @@ export async function handler(req: Request, connInfo: ConnInfo, appConfig: AppCo
 
 if (import.meta.main) {
   // Load combined config including RPC and rate limit settings
-  const appConfig = await loadAppConfig();
+  const appConfig = loadAppConfig();
 
   if (appConfig) {
     console.log(`🚀 Starting RPC proxy server on http://localhost:8000`);
