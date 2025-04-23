@@ -38,4 +38,4 @@ EXPOSE 8000
 # Define the command to run the application
 # --allow-env is needed to read the ENV variables set above
 # --allow-net is needed for serving requests and fetching upstream
-CMD ["deno", "run", "--allow-net", "--allow-env", "main.ts"]
+CMD ["deno", "run", "--allow-net", "--allow-env", "--allow-read", "main.ts"]
