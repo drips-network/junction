@@ -231,13 +231,6 @@ export async function handler(req: Request, connInfo: ConnInfo, appConfig: AppCo
     return new Response(`Bad Request: Invalid JSON body. ${message}`, { status: 400 });
   }
 
-  // Basic check for JSON-RPC structure
-  if (typeof requestBody !== 'object' || requestBody === null || !requestBody.method) {
-      console.warn(`[${slug}] Invalid JSON-RPC request structure: ${JSON.stringify(requestBody).substring(0, 100)}...`);
-      rpcClientResponseTotal.inc({ network: slug, status_code: "400" });
-      return new Response(`Bad Request: Invalid JSON-RPC request structure.`, { status: 400 });
-  }
-
   // Log whether the request was treated as trusted or public
   console.log(`[${slug}] ${isTrusted ? '[Trusted]' : '[Public]'} --> Method: ${requestBody.method}, ID: ${requestBody?.id ?? 'N/A'}`);
 
