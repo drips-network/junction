@@ -10,6 +10,7 @@ ARG RPC_CONFIG
 ARG INTERNAL_AUTH_TOKEN
 ARG PUBLIC_RATE_LIMIT_ENABLED
 ARG PUBLIC_RATE_LIMIT_RPM
+ARG PROMETHEUS_URL="" # Add ARG for Pushgateway URL (optional)
 
 # Set runtime environment variables from the build arguments
 # These will be available to the Deno application when it runs
@@ -17,6 +18,7 @@ ENV RPC_CONFIG=$RPC_CONFIG
 ENV INTERNAL_AUTH_TOKEN=$INTERNAL_AUTH_TOKEN
 ENV PUBLIC_RATE_LIMIT_ENABLED=$PUBLIC_RATE_LIMIT_ENABLED
 ENV PUBLIC_RATE_LIMIT_RPM=$PUBLIC_RATE_LIMIT_RPM
+ENV PROMETHEUS_URL=$PROMETHEUS_URL
 
 # Copy project files into the container
 # Copy deno.json and deno.lock first to leverage Docker cache for dependencies

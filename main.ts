@@ -1,7 +1,7 @@
 import { serve, ConnInfo } from "https://deno.land/std@0.182.0/http/server.ts";
 import { z } from "zod";
-// Use prom-client via npm specifier
-import client from "npm:prom-client";
+// Use prom-client via npm specifier - import Pushgateway as well
+import client, { Pushgateway } from "npm:prom-client";
 
 // --- Rate Limiter Types and State ---
 interface RateLimitConfig {
@@ -311,7 +311,42 @@ if (import.meta.main) {
 
   if (appConfig) {
     console.log(`🚀 Starting RPC proxy server on http://localhost:8000`);
-    console.log(`📊 Metrics available at http://localhost:8000/metrics`);
+    console.log(`📊 Metrics available via scrape at http://localhost:8000/metrics`);
+
+    // --- Pushgateway Setup ---
+    const pushgatewayUrl = Deno.env.get("PROMETHEUS_URL");
+    const pushIntervalMs = 15000; // Push every 15 seconds
+    let pushIntervalId: number | undefined;
+
+    if (pushgatewayUrl) {
+      console.log(` Pushing metrics to Pushgateway: ${pushgatewayUrl} every ${pushIntervalMs}ms`);
+      const gateway = new Pushgateway(pushgatewayUrl);
+      const jobName = 'rpc-proxy'; // You might want to make this configurable
+
+      // Define the push function with error handling
+      const pushMetrics = async () => {
+        try {
+          // Use pushAdd to not overwrite metrics from other instances using the same job name
+          await gateway.pushAdd({ jobName });
+          console.log(`[Pushgateway] Metrics pushed successfully to ${pushgatewayUrl}`);
+        } catch (err) {
+          console.error(`[Pushgateway] Error pushing metrics to ${pushgatewayUrl}:`, err);
+        }
+      };
+
+      // Initial push
+      pushMetrics(); 
+      // Set interval for periodic pushes
+      pushIntervalId = setInterval(pushMetrics, pushIntervalMs);
+
+      // Optional: Add graceful shutdown for the interval? Deno doesn't have SIGTERM handling built-in easily.
+      // Deno.addSignalListener("SIGINT", () => {
+      //   console.log("SIGINT received, stopping Pushgateway interval...");
+      //   if (pushIntervalId) clearInterval(pushIntervalId);
+      //   Deno.exit();
+      // });
+    }
+    // --- End Pushgateway Setup ---
     
     serve(async (req: Request, connInfo: ConnInfo) => {
       const url = new URL(req.url);
