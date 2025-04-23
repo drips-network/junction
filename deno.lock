@@ -1,0 +1,171 @@
+{
+  "version": "4",
+  "specifiers": {
+    "jsr:@std/assert@1": "1.0.12",
+    "jsr:@std/internal@^1.0.6": "1.0.6",
+    "npm:@opentelemetry/exporter-prometheus@0.51.0": "0.51.0_@opentelemetry+api@1.9.0",
+    "npm:@opentelemetry/sdk-metrics@1.24.0": "1.24.0_@opentelemetry+api@1.8.0",
+    "npm:@types/node@*": "22.12.0",
+    "npm:prom-client@*": "15.1.3"
+  },
+  "jsr": {
+    "@std/assert@1.0.12": {
+      "integrity": "08009f0926dda9cbd8bef3a35d3b6a4b964b0ab5c3e140a4e0351fbf34af5b9a",
+      "dependencies": [
+        "jsr:@std/internal"
+      ]
+    },
+    "@std/internal@1.0.6": {
+      "integrity": "9533b128f230f73bd209408bb07a4b12f8d4255ab2a4d22a1fd6d87304aca9a4"
+    }
+  },
+  "npm": {
+    "@opentelemetry/api@1.8.0": {
+      "integrity": "sha512-I/s6F7yKUDdtMsoBWXJe8Qz40Tui5vsuKCWJEWVL+5q9sSWRzzx6v2KeNsOBEwd94j0eWkpWCH4yB6rZg9Mf0w=="
+    },
+    "@opentelemetry/api@1.9.0": {
+      "integrity": "sha512-3giAOQvZiH5F9bMlMiv8+GSPMeqg0dbaeo58/0SlA9sxSqZhnUtxzX9/2FzyhS9sWQf5S0GJE0AKBrFqjpeYcg=="
+    },
+    "@opentelemetry/core@1.24.0_@opentelemetry+api@1.8.0": {
+      "integrity": "sha512-FP2oN7mVPqcdxJDTTnKExj4mi91EH+DNuArKfHTjPuJWe2K1JfMIVXNfahw1h3onJxQnxS8K0stKkogX05s+Aw==",
+      "dependencies": [
+        "@opentelemetry/api@1.8.0",
+        "@opentelemetry/semantic-conventions"
+      ]
+    },
+    "@opentelemetry/core@1.24.0_@opentelemetry+api@1.9.0": {
+      "integrity": "sha512-FP2oN7mVPqcdxJDTTnKExj4mi91EH+DNuArKfHTjPuJWe2K1JfMIVXNfahw1h3onJxQnxS8K0stKkogX05s+Aw==",
+      "dependencies": [
+        "@opentelemetry/api@1.9.0",
+        "@opentelemetry/semantic-conventions"
+      ]
+    },
+    "@opentelemetry/exporter-prometheus@0.51.0_@opentelemetry+api@1.9.0": {
+      "integrity": "sha512-oT5l3Mff1U40U5Knr/XZFkYlvvLVVBGsM7u6cU99YZRlNX2uovGImZIeAhy60i178GVg2dpN1d5iQHYvN457aQ==",
+      "dependencies": [
+        "@opentelemetry/api@1.9.0",
+        "@opentelemetry/core@1.24.0_@opentelemetry+api@1.9.0",
+        "@opentelemetry/resources@1.24.0_@opentelemetry+api@1.9.0",
+        "@opentelemetry/sdk-metrics@1.24.0_@opentelemetry+api@1.9.0"
+      ]
+    },
+    "@opentelemetry/resources@1.24.0_@opentelemetry+api@1.8.0": {
+      "integrity": "sha512-mxC7E7ocUS1tLzepnA7O9/G8G6ZTdjCH2pXme1DDDuCuk6n2/53GADX+GWBuyX0dfIxeMInIbJAdjlfN9GNr6A==",
+      "dependencies": [
+        "@opentelemetry/api@1.8.0",
+        "@opentelemetry/core@1.24.0_@opentelemetry+api@1.8.0",
+        "@opentelemetry/semantic-conventions"
+      ]
+    },
+    "@opentelemetry/resources@1.24.0_@opentelemetry+api@1.9.0": {
+      "integrity": "sha512-mxC7E7ocUS1tLzepnA7O9/G8G6ZTdjCH2pXme1DDDuCuk6n2/53GADX+GWBuyX0dfIxeMInIbJAdjlfN9GNr6A==",
+      "dependencies": [
+        "@opentelemetry/api@1.9.0",
+        "@opentelemetry/core@1.24.0_@opentelemetry+api@1.9.0",
+        "@opentelemetry/semantic-conventions"
+      ]
+    },
+    "@opentelemetry/sdk-metrics@1.24.0_@opentelemetry+api@1.8.0": {
+      "integrity": "sha512-4tJ+E6N019OZVB/nUW/LoK9xHxfeh88TCoaTqHeLBE9wLYfi6irWW6J9cphMav7J8Qk0D5b7/RM4VEY4dArWOA==",
+      "dependencies": [
+        "@opentelemetry/api@1.8.0",
+        "@opentelemetry/core@1.24.0_@opentelemetry+api@1.8.0",
+        "@opentelemetry/resources@1.24.0_@opentelemetry+api@1.8.0",
+        "lodash.merge"
+      ]
+    },
+    "@opentelemetry/sdk-metrics@1.24.0_@opentelemetry+api@1.9.0": {
+      "integrity": "sha512-4tJ+E6N019OZVB/nUW/LoK9xHxfeh88TCoaTqHeLBE9wLYfi6irWW6J9cphMav7J8Qk0D5b7/RM4VEY4dArWOA==",
+      "dependencies": [
+        "@opentelemetry/api@1.9.0",
+        "@opentelemetry/core@1.24.0_@opentelemetry+api@1.9.0",
+        "@opentelemetry/resources@1.24.0_@opentelemetry+api@1.9.0",
+        "lodash.merge"
+      ]
+    },
+    "@opentelemetry/semantic-conventions@1.24.0": {
+      "integrity": "sha512-yL0jI6Ltuz8R+Opj7jClGrul6pOoYrdfVmzQS4SITXRPH7I5IRZbrwe/6/v8v4WYMa6MYZG480S1+uc/IGfqsA=="
+    },
+    "@types/node@22.12.0": {
+      "integrity": "sha512-Fll2FZ1riMjNmlmJOdAyY5pUbkftXslB5DgEzlIuNaiWhXd00FhWxVC/r4yV/4wBb9JfImTu+jiSvXTkJ7F/gA==",
+      "dependencies": [
+        "undici-types"
+      ]
+    },
+    "bintrees@1.0.2": {
+      "integrity": "sha512-VOMgTMwjAaUG580SXn3LacVgjurrbMme7ZZNYGSSV7mmtY6QQRh0Eg3pwIcntQ77DErK1L0NxkbetjcoXzVwKw=="
+    },
+    "lodash.merge@4.6.2": {
+      "integrity": "sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ=="
+    },
+    "prom-client@15.1.3": {
+      "integrity": "sha512-6ZiOBfCywsD4k1BN9IX0uZhF+tJkV8q8llP64G5Hajs4JOeVLPCwpPVcpXy3BwYiUGgyJzsJJQeOIv7+hDSq8g==",
+      "dependencies": [
+        "@opentelemetry/api@1.9.0",
+        "tdigest"
+      ]
+    },
+    "tdigest@0.1.2": {
+      "integrity": "sha512-+G0LLgjjo9BZX2MfdvPfH+MKLCrxlXSYec5DaPYP1fe6Iyhf0/fSmJ0bFiZ1F8BT6cGXl2LpltQptzjXKWEkKA==",
+      "dependencies": [
+        "bintrees"
+      ]
+    },
+    "undici-types@6.20.0": {
+      "integrity": "sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg=="
+    }
+  },
+  "remote": {
+    "https://deno.land/std@0.182.0/async/abortable.ts": "fd682fa46f3b7b16b4606a5ab52a7ce309434b76f820d3221bdfb862719a15d7",
+    "https://deno.land/std@0.182.0/async/deadline.ts": "c5facb0b404eede83e38bd2717ea8ab34faa2ffb20ef87fd261fcba32ba307aa",
+    "https://deno.land/std@0.182.0/async/debounce.ts": "adab11d04ca38d699444ac8a9d9856b4155e8dda2afd07ce78276c01ea5a4332",
+    "https://deno.land/std@0.182.0/async/deferred.ts": "42790112f36a75a57db4a96d33974a936deb7b04d25c6084a9fa8a49f135def8",
+    "https://deno.land/std@0.182.0/async/delay.ts": "73aa04cec034c84fc748c7be49bb15cac3dd43a57174bfdb7a4aec22c248f0dd",
+    "https://deno.land/std@0.182.0/async/mod.ts": "f04344fa21738e5ad6bea37a6bfffd57c617c2d372bb9f9dcfd118a1b622e576",
+    "https://deno.land/std@0.182.0/async/mux_async_iterator.ts": "70c7f2ee4e9466161350473ad61cac0b9f115cff4c552eaa7ef9d50c4cbb4cc9",
+    "https://deno.land/std@0.182.0/async/pool.ts": "fd082bd4aaf26445909889435a5c74334c017847842ec035739b4ae637ae8260",
+    "https://deno.land/std@0.182.0/async/retry.ts": "dd19d93033d8eaddbfcb7654c0366e9d3b0a21448bdb06eba4a7d8a8cf936a92",
+    "https://deno.land/std@0.182.0/async/tee.ts": "47e42d35f622650b02234d43803d0383a89eb4387e1b83b5a40106d18ae36757",
+    "https://deno.land/std@0.182.0/http/server.ts": "cbb17b594651215ba95c01a395700684e569c165a567e4e04bba327f41197433",
+    "https://deno.land/std@0.224.0/assert/_constants.ts": "a271e8ef5a573f1df8e822a6eb9d09df064ad66a4390f21b3e31f820a38e0975",
+    "https://deno.land/std@0.224.0/assert/assert_equals.ts": "3bbca947d85b9d374a108687b1a8ba3785a7850436b5a8930d81f34a32cb8c74",
+    "https://deno.land/std@0.224.0/assert/assert_is_error.ts": "f856b3bc978a7aa6a601f3fec6603491ab6255118afa6baa84b04426dd3cc491",
+    "https://deno.land/std@0.224.0/assert/assert_rejects.ts": "4bee1d6d565a5b623146a14668da8f9eb1f026a4f338bbf92b37e43e0aa53c31",
+    "https://deno.land/std@0.224.0/assert/assertion_error.ts": "ba8752bd27ebc51f723702fac2f54d3e94447598f54264a6653d6413738a8917",
+    "https://deno.land/std@0.224.0/assert/equal.ts": "bddf07bb5fc718e10bb72d5dc2c36c1ce5a8bdd3b647069b6319e07af181ac47",
+    "https://deno.land/std@0.224.0/dotenv/mod.ts": "0180eaeedaaf88647318811cdaa418cc64dc51fb08354f91f5f480d0a1309f7d",
+    "https://deno.land/std@0.224.0/dotenv/parse.ts": "09977ff88dfd1f24f9973a338f0f91bbdb9307eb5ff6085446e7c423e4c7ba0c",
+    "https://deno.land/std@0.224.0/dotenv/stringify.ts": "275da322c409170160440836342eaa7cf012a1d11a7e700d8ca4e7f2f8aa4615",
+    "https://deno.land/std@0.224.0/fmt/colors.ts": "508563c0659dd7198ba4bbf87e97f654af3c34eb56ba790260f252ad8012e1c5",
+    "https://deno.land/std@0.224.0/internal/diff.ts": "6234a4b493ebe65dc67a18a0eb97ef683626a1166a1906232ce186ae9f65f4e6",
+    "https://deno.land/std@0.224.0/internal/format.ts": "0a98ee226fd3d43450245b1844b47003419d34d210fa989900861c79820d21c2",
+    "https://deno.land/std@0.224.0/internal/mod.ts": "534125398c8e7426183e12dc255bb635d94e06d0f93c60a297723abe69d3b22e",
+    "https://deno.land/std@0.224.0/testing/mock.ts": "a963181c2860b6ba3eb60e08b62c164d33cf5da7cd445893499b2efda20074db",
+    "https://deno.land/x/ts_prometheus@v0.3.0/collector.ts": "12305e262e60de3b9b2db22670f95e388b6f4c0ff8da0fdbaf4cd4758bb5b1b6",
+    "https://deno.land/x/ts_prometheus@v0.3.0/counter.ts": "c6a03fc6ceb732a70728e2633a6781f607615c5ce5e6ee46fdff34b37bde0ef5",
+    "https://deno.land/x/ts_prometheus@v0.3.0/gauge.ts": "d2d3b79df3fae07652ee3b72c118cf6e96c834c82c81eb2ebf52e8f136b24fa5",
+    "https://deno.land/x/ts_prometheus@v0.3.0/histogram.ts": "7585024285ef52b29054adc02d480f5ac4595e0037a8ad5bd1d75ddc205a3fd0",
+    "https://deno.land/x/ts_prometheus@v0.3.0/metric.ts": "c7635f8b4ec92742e01244712bb8264c32ce91c03f3a8332b9119926dab027cb",
+    "https://deno.land/x/ts_prometheus@v0.3.0/mod.ts": "9fef6a6c301da262dfa38d111cb4011e96d0c6b1c9f1a233526506c8ce8723bb",
+    "https://deno.land/x/ts_prometheus@v0.3.0/registry.ts": "b7d4b4b6e008d7ffb8b4acff6a1a56b27463bfb4ecec4f0455562187f7941891",
+    "https://deno.land/x/ts_prometheus@v0.3.0/summary.ts": "d1ef0341e265fa8d2a2bc42e8d732428d8aadbfa0f60ce4c2baa0486910590df",
+    "https://deno.land/x/zod@v3.23.4/ZodError.ts": "528da200fbe995157b9ae91498b103c4ef482217a5c086249507ac850bd78f52",
+    "https://deno.land/x/zod@v3.23.4/errors.ts": "5285922d2be9700cc0c70c95e4858952b07ae193aa0224be3cbd5cd5567eabef",
+    "https://deno.land/x/zod@v3.23.4/external.ts": "a6cfbd61e9e097d5f42f8a7ed6f92f93f51ff927d29c9fbaec04f03cbce130fe",
+    "https://deno.land/x/zod@v3.23.4/helpers/enumUtil.ts": "54efc393cc9860e687d8b81ff52e980def00fa67377ad0bf8b3104f8a5bf698c",
+    "https://deno.land/x/zod@v3.23.4/helpers/errorUtil.ts": "7a77328240be7b847af6de9189963bd9f79cab32bbc61502a9db4fe6683e2ea7",
+    "https://deno.land/x/zod@v3.23.4/helpers/parseUtil.ts": "c14814d167cc286972b6e094df88d7d982572a08424b7cd50f862036b6fcaa77",
+    "https://deno.land/x/zod@v3.23.4/helpers/partialUtil.ts": "998c2fe79795257d4d1cf10361e74492f3b7d852f61057c7c08ac0a46488b7e7",
+    "https://deno.land/x/zod@v3.23.4/helpers/typeAliases.ts": "0fda31a063c6736fc3cf9090dd94865c811dfff4f3cb8707b932bf937c6f2c3e",
+    "https://deno.land/x/zod@v3.23.4/helpers/util.ts": "3301a69867c9e589ac5b3bc4d7a518b5212858cd6a25e8b02d635c9c32ba331c",
+    "https://deno.land/x/zod@v3.23.4/index.ts": "d27aabd973613985574bc31f39e45cb5d856aa122ef094a9f38a463b8ef1a268",
+    "https://deno.land/x/zod@v3.23.4/locales/en.ts": "a7a25cd23563ccb5e0eed214d9b31846305ddbcdb9c5c8f508b108943366ab4c",
+    "https://deno.land/x/zod@v3.23.4/mod.ts": "ec6e2b1255c1a350b80188f97bd0a6bac45801bb46fc48f50b9763aa66046039",
+    "https://deno.land/x/zod@v3.23.4/types.ts": "7641b9850663f368f568c243eac418fa19834e78b31a866c73772116caa53e7d"
+  },
+  "workspace": {
+    "dependencies": [
+      "jsr:@std/assert@1"
+    ]
+  }
+}
