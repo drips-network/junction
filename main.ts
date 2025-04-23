@@ -232,7 +232,7 @@ export async function handler(req: Request, connInfo: ConnInfo, appConfig: AppCo
   }
 
   // Log whether the request was treated as trusted or public
-  console.log(`[${slug}] ${isTrusted ? '[Trusted]' : '[Public]'} --> Method: ${requestBody.method}, ID: ${requestBody?.id ?? 'N/A'}`);
+  console.log(`[${slug}] ${isTrusted ? '[Trusted]' : '[Public]'} --> Method: ${requestBody.method ?? 'Multiple or unknown'}, ID: ${requestBody?.id ?? 'N/A'}`);
 
   // Log the RPC request content up to 100 characters
   const requestBodyString = JSON.stringify(requestBody);
