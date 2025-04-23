@@ -271,8 +271,17 @@ export async function handler(req: Request, connInfo: ConnInfo, appConfig: AppCo
         rpcUpstreamResponseTotal.inc({ network: slug, upstream_url: endpoint.url, status_code: String(response.status), outcome: 'success' });
         // Increment client success counter before returning
         rpcClientResponseTotal.inc({ network: slug, status_code: "200" });
-        // Return the successful response directly
-        return response;
+        
+        // Clone headers, but remove content-encoding as fetch decompressed it.
+        const responseHeaders = new Headers(response.headers);
+        responseHeaders.delete('content-encoding'); 
+        
+        // Return a new response with the decompressed body and modified headers
+        return new Response(response.body, {
+          status: response.status,
+          statusText: response.statusText,
+          headers: responseHeaders
+        });
       } else {
         // Increment upstream HTTP error counter
         rpcUpstreamResponseTotal.inc({ network: slug, upstream_url: endpoint.url, status_code: String(response.status), outcome: 'http_error' });
