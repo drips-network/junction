@@ -227,11 +227,13 @@ export async function handler(req: Request, connInfo: ConnInfo, appConfig: AppCo
   } catch (e) {
     const message = e instanceof Error ? e.message : String(e);
     rpcClientResponseTotal.inc({ network: slug, status_code: "400" });
+    console.warn(`[${slug}] Invalid JSON body: ${message}`);
     return new Response(`Bad Request: Invalid JSON body. ${message}`, { status: 400 });
   }
 
   // Basic check for JSON-RPC structure
   if (typeof requestBody !== 'object' || requestBody === null || !requestBody.method) {
+      console.warn(`[${slug}] Invalid JSON-RPC request structure: ${JSON.stringify(requestBody).substring(0, 100)}...`);
       rpcClientResponseTotal.inc({ network: slug, status_code: "400" });
       return new Response(`Bad Request: Invalid JSON-RPC request structure.`, { status: 400 });
   }
@@ -281,9 +283,7 @@ export async function handler(req: Request, connInfo: ConnInfo, appConfig: AppCo
         return new Response(JSON.stringify(body), {
           status: response.status,
           statusText: response.statusText,
-          headers: {
-            'Content-Type': response.headers.get('content-type') || 'application/json',
-          }
+          headers: response.headers
         });
       } else {
         // Increment upstream HTTP error counter
