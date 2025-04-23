@@ -278,8 +278,7 @@ export async function handler(req: Request, connInfo: ConnInfo, appConfig: AppCo
         // Increment client success counter before returning
         rpcClientResponseTotal.inc({ network: slug, status_code: "200" });
 
-        // Return a new response with the decompressed body and modified headers
-        return new Response(body, {
+        return new Response(JSON.stringify(body), {
           status: response.status,
           statusText: response.statusText,
           headers: {
