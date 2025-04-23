@@ -239,6 +239,10 @@ export async function handler(req: Request, connInfo: ConnInfo, appConfig: AppCo
   // Log whether the request was treated as trusted or public
   console.log(`[${slug}] ${isTrusted ? '[Trusted]' : '[Public]'} --> Method: ${requestBody.method}, ID: ${requestBody?.id ?? 'N/A'}`);
 
+  // Log the RPC request content up to 100 characters
+  const requestBodyString = JSON.stringify(requestBody);
+  console.log(`[${slug}] Request Body: ${requestBodyString.substring(0, 200)}...`);
+
   for (const endpoint of endpoints) {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), RPC_TIMEOUT_MS);
@@ -266,21 +270,21 @@ export async function handler(req: Request, connInfo: ConnInfo, appConfig: AppCo
       clearTimeout(timeoutId); // Clear timeout if fetch completes
 
       if (response.ok) {
-        console.log(`[${slug}] <-- Success from ${endpoint.url} (Status: ${response.status})`);
+        const body = await response.json();
+
+        console.log(`[${slug}] <-- Success from ${endpoint.url} (Status: ${response.status}, Response: ${JSON.stringify(body).substring(0, 200)}...)`);
         // Increment upstream success counter
         rpcUpstreamResponseTotal.inc({ network: slug, upstream_url: endpoint.url, status_code: String(response.status), outcome: 'success' });
         // Increment client success counter before returning
         rpcClientResponseTotal.inc({ network: slug, status_code: "200" });
-        
-        // Clone headers, but remove content-encoding as fetch decompressed it.
-        const responseHeaders = new Headers(response.headers);
-        responseHeaders.delete('content-encoding'); 
-        
+
         // Return a new response with the decompressed body and modified headers
-        return new Response(response.body, {
+        return new Response(body, {
           status: response.status,
           statusText: response.statusText,
-          headers: responseHeaders
+          headers: {
+            'Content-Type': response.headers.get('content-type') || 'application/json',
+          }
         });
       } else {
         // Increment upstream HTTP error counter
