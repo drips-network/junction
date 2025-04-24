@@ -19,6 +19,21 @@ export function startServer(appConfig: AppConfig): void {
   initializePushgateway(appConfig);
 
   serve(async (req: Request, connInfo: ConnInfo) => {
+    // --- CORS Preflight Request Handling ---
+    if (req.method === "OPTIONS") {
+      // Handle CORS preflight requests
+      return new Response(null, { // No body for 204
+        status: 204,
+        headers: {
+          "Access-Control-Allow-Origin": "*", // Allow any origin
+          "Access-Control-Allow-Methods": "POST, OPTIONS", // Allow POST (for RPC) and OPTIONS (for preflight)
+          "Access-Control-Allow-Headers": "Content-Type, Authorization", // Allow necessary headers
+          "Access-Control-Max-Age": "86400", // Cache preflight response for 1 day
+        },
+      });
+    }
+
+    // --- Regular Request Handling ---
     const url = new URL(req.url);
 
     // --- Metrics Endpoint Handling ---
@@ -47,10 +62,16 @@ export function startServer(appConfig: AppConfig): void {
       try {
         console.log(`[Metrics] Authorized access to /metrics.`);
         const metrics = await getMetrics();
+        // Add CORS header to metrics response
         return new Response(metrics, {
-          headers: { "Content-Type": getMetricsContentType() },
+          headers: {
+            "Content-Type": getMetricsContentType(),
+            "Access-Control-Allow-Origin": "*", // Add CORS header
+          },
         });
       } catch (e) {
+        // Note: We might want to add CORS headers to error responses too,
+        // but for now, focusing on successful responses as per the plan.
         const message = e instanceof Error ? e.message : String(e);
         console.error("Error generating metrics:", message);
         return new Response("Error generating metrics", { status: 500 });
@@ -59,7 +80,12 @@ export function startServer(appConfig: AppConfig): void {
 
     // --- RPC Request Handling ---
     // Pass the request to the dedicated RPC handler
-    return handleRpcRequest(req, connInfo, appConfig);
+    const response = await handleRpcRequest(req, connInfo, appConfig);
+
+    // Add CORS header to the RPC response (success or error from handler)
+    response.headers.set("Access-Control-Allow-Origin", "*");
+
+    return response;
 
   }, { port: SERVER_PORT, hostname: SERVER_HOSTNAME });
 
