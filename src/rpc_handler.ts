@@ -2,7 +2,7 @@ import type { AppConfig } from "./config.ts";
 import { checkRateLimit } from "./rate_limiter.ts";
 
 
-const networkPattern = new URLPattern({ pathname: "/rpc/:slug" });
+const networkPattern = new URLPattern({ pathname: "/:slug" });
 const RPC_TIMEOUT_MS = 10000; // 10 seconds timeout for upstream RPC calls
 
 
