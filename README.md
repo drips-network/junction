@@ -1,6 +1,8 @@
 # ➕ Junction
 
-This Deno project acts as a proxy for Ethereum JSON-RPC requests. It forwards incoming requests to one or more configured upstream RPC providers based on the request path (network slug).
+This Deno project acts as a router-proxy for Ethereum JSON-RPC requests. It forwards incoming requests to one or more configured upstream RPC providers based on the request path (network / chain slug).
+
+If more than one RPC is configured for a given network, it will automatically fail over requests to backup RPCs.
 
 ## Features
 
@@ -8,8 +10,6 @@ This Deno project acts as a proxy for Ethereum JSON-RPC requests. It forwards in
 *   Supports multiple upstream providers per network for failover.
 *   Optional rate limiting for public requests (per IP).
 *   Optional bypass token for internal/trusted requests (skips rate limiting).
-*   Exposes Prometheus metrics for monitoring request volume and success/failure rates.
-*   Optional: Pushes metrics to a Prometheus Pushgateway.
 
 ## Configuration
 
@@ -41,19 +41,6 @@ Configuration is managed via environment variables, typically loaded from a `.en
 
 4.  **`PUBLIC_RATE_LIMIT_RPM`**: (Optional) The maximum requests per minute allowed per IP address when rate limiting is enabled. Defaults to `60`.
 
-5.  **`PROMETHEUS_URL`**: (Optional) If set to the URL of a Prometheus Pushgateway (e.g., `http://pushgateway.example.com:9091`), the proxy will periodically push its metrics to the gateway under the job name `rpc-proxy`. This is useful for environments where scraping the `/metrics` endpoint is difficult.
-
-Create a `.env` file in the project root with these variables:
-
-```dotenv
-# Example .env
-RPC_CONFIG='{ "mainnet": [{ "url": "https://rpc.ankr.com/eth" }], "sepolia": [{ "url": "https://rpc.ankr.com/eth_sepolia" }] }'
-INTERNAL_AUTH_TOKEN="your-secret-proxy-token"
-PUBLIC_RATE_LIMIT_ENABLED=true
-PUBLIC_RATE_LIMIT_RPM=120
-# PROMETHEUS_URL=http://your-pushgateway-url:9091 # Optional: Uncomment and set to enable pushing
-```
-
 ## Running the Proxy
 
 Ensure you have [Deno](https://deno.land/) installed.
@@ -64,11 +51,12 @@ Ensure you have [Deno](https://deno.land/) installed.
     ```
 2.  **Run the server:**
     ```bash
-    deno run --allow-net --allow-env --allow-read main.ts
+    deno run --allow-net --allow-env --allow-read [--env-file] [--] main.ts
     ```
     *   `--allow-net`: Required for listening for incoming requests, making outgoing RPC calls, and pushing to Pushgateway.
     *   `--allow-env`: Required to read environment variables.
     *   `--allow-read`: Required if using a `.env` file (though Deno reads env vars directly now, this flag might still be needed depending on exact Deno version/usage).
+    *   `--env-file` (optional): Read and ingest `.env` file in the root dir to source environment variables.
 
 The proxy will start listening on `http://localhost:8000`.
 
@@ -79,16 +67,3 @@ Send standard JSON-RPC POST requests to the appropriate network path:
 *   `http://localhost:8000/mainnet`
 *   `http://localhost:8000/sepolia`
 *   etc.
-
-## Metrics
-
-Prometheus metrics are exposed in two ways:
-
-1.  **Scrape Endpoint:** Metrics can be scraped by Prometheus from the `/metrics` endpoint:
-    *   `http://localhost:8000/metrics`
-    *   Accessing this endpoint requires providing the `INTERNAL_AUTH_TOKEN` as a Bearer token in the `Authorization` header:
-        ```bash
-        curl -H "Authorization: Bearer your-secret-proxy-token" http://localhost:8000/metrics
-        ```
-
-2.  **Pushgateway:** If the `PROMETHEUS_URL` environment variable is set, the proxy will automatically push metrics to the configured Pushgateway URL every 15 seconds. This is useful for environments where scraping is not feasible. The metrics are pushed under the job name `rpc-proxy`.

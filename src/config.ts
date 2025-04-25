@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-// --- Configuration Schemas and Types ---
 
 const RpcEndpointSchema = z.object({
   url: z.string().url(),
@@ -20,10 +19,8 @@ export interface RateLimitConfig {
 export interface AppConfig {
   rpc: RpcConfig;
   rateLimit: RateLimitConfig;
-  pushgatewayUrl: string | null; // Added for Pushgateway config
 }
 
-// --- Configuration Loading Function ---
 
 export function loadAppConfig(): AppConfig | null {
   try {
@@ -34,7 +31,6 @@ export function loadAppConfig(): AppConfig | null {
     const bypassToken = Deno.env.get("INTERNAL_AUTH_TOKEN") || null; // Allow empty/missing token
     const rateLimitEnabled = Deno.env.get("PUBLIC_RATE_LIMIT_ENABLED")?.toLowerCase() === "true";
     const rateLimitRpmStr = Deno.env.get("PUBLIC_RATE_LIMIT_RPM");
-    const pushgatewayUrl = Deno.env.get("PROMETHEUS_URL") || null; // Load Pushgateway URL
     let rateLimitRpm = 60; // Default RPM
 
     if (!configJson) {
@@ -64,12 +60,6 @@ export function loadAppConfig(): AppConfig | null {
         console.log("ℹ️ No internal bypass token configured.");
     }
 
-    if (pushgatewayUrl) {
-        console.log(`✅ Prometheus Pushgateway configured: ${pushgatewayUrl}`);
-    } else {
-        console.log("ℹ️ Prometheus Pushgateway not configured.");
-    }
-
 
     const parsedConfig = JSON.parse(configJson);
     const validationResult = RpcConfigSchema.safeParse(parsedConfig);
@@ -90,7 +80,6 @@ export function loadAppConfig(): AppConfig | null {
         rpm: rateLimitRpm,
         bypassToken: bypassToken,
       },
-      pushgatewayUrl: pushgatewayUrl,
     };
   } catch (error) {
     console.error("Error loading or parsing configuration:", error);

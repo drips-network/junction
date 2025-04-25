@@ -1,11 +1,10 @@
 import type { AppConfig } from "./config.ts";
 import { checkRateLimit } from "./rate_limiter.ts";
 
-// --- Constants ---
-const networkPattern = new URLPattern({ pathname: "/:slug" });
+
+const networkPattern = new URLPattern({ pathname: "/rpc/:slug" });
 const RPC_TIMEOUT_MS = 10000; // 10 seconds timeout for upstream RPC calls
 
-// --- Main RPC Request Handler ---
 
 /**
  * Handles an incoming JSON-RPC request, performing authentication, rate limiting,
@@ -19,13 +18,11 @@ const RPC_TIMEOUT_MS = 10000; // 10 seconds timeout for upstream RPC calls
 export async function handleRpcRequest(req: Request, info: Deno.ServeHandlerInfo, appConfig: AppConfig): Promise<Response> {
   const { rpc: rpcConfig, rateLimit: rateLimitConfig } = appConfig;
 
-  // --- Determine Slug Early ---
   // Use 'unknown' if slug extraction fails, useful for metrics before returning 404 or 429
   const url = new URL(req.url); // Need URL object for pattern matching
   const match = networkPattern.exec(url);
   const slug = match?.pathname?.groups?.slug ?? "unknown";
 
-  // --- Auth & Rate Limiting ---
   let isTrusted = false;
   const authHeader = req.headers.get("Authorization");
   if (rateLimitConfig.bypassToken && authHeader?.startsWith("Bearer ")) {
@@ -43,7 +40,6 @@ export async function handleRpcRequest(req: Request, info: Deno.ServeHandlerInfo
   }
 
   if (!isTrusted) {
-      // Apply rate limiting for untrusted requests
       const remoteAddr = info.remoteAddr;
       // Ensure we have a hostname (IP address) to key the rate limit off
       if (remoteAddr.transport === "tcp" || remoteAddr.transport === "udp") {
@@ -62,9 +58,7 @@ export async function handleRpcRequest(req: Request, info: Deno.ServeHandlerInfo
           console.warn(`[RateLimit] Cannot apply IP-based rate limit for transport type: ${remoteAddr.transport}`);
       }
   }
-  // --- End Auth & Rate Limiting ---
 
-  // Check the original match result for routing logic (after rate limiting)
   if (!match?.pathname?.groups?.slug) {
     // This case should ideally not be hit if slug was 'unknown' before,
     // but keep it as a safeguard if pattern matching fails unexpectedly.
@@ -72,7 +66,6 @@ export async function handleRpcRequest(req: Request, info: Deno.ServeHandlerInfo
     return new Response("Not found", { status: 404 });
   }
 
-  // Re-extract slug now that we know the pattern matched
   const validSlug = match.pathname.groups.slug;
 
   const endpoints = rpcConfig[validSlug];
@@ -99,16 +92,13 @@ export async function handleRpcRequest(req: Request, info: Deno.ServeHandlerInfo
     return new Response(`Bad Request: Invalid JSON body. ${message}`, { status: 400 });
   }
 
-  // Log whether the request was treated as trusted or public
   const method = Array.isArray(requestBody) ? 'batch' : requestBody.method ?? 'unknown';
   const id = Array.isArray(requestBody) ? 'batch' : requestBody.id ?? 'N/A';
   console.log(`[${validSlug}] ${isTrusted ? '[Trusted]' : '[Public]'} --> Method: ${method}, ID: ${id}`);
 
-  // Log the RPC request content (truncated)
   const requestBodyString = JSON.stringify(requestBody);
   console.log(`[${validSlug}] Request Body: ${requestBodyString.substring(0, 200)}${requestBodyString.length > 200 ? '...' : ''}`);
 
-  // --- Upstream Forwarding Loop ---
   for (const endpoint of endpoints) {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), RPC_TIMEOUT_MS);
@@ -118,7 +108,6 @@ export async function handleRpcRequest(req: Request, info: Deno.ServeHandlerInfo
         "Content-Type": "application/json",
         // Consider adding other headers like User-Agent if needed
       });
-      // Add upstream auth token if configured for the specific endpoint
       if (endpoint.authToken) {
         headers.set("Authorization", endpoint.authToken);
       }
@@ -132,35 +121,32 @@ export async function handleRpcRequest(req: Request, info: Deno.ServeHandlerInfo
         signal: controller.signal,
       });
 
-      clearTimeout(timeoutId); // Clear timeout if fetch completes
+      clearTimeout(timeoutId);
 
       const responseBodyText = await response.text(); // Read body once
 
       if (response.ok) {
-        // Attempt to parse JSON, handle potential errors
         let responseBodyJson;
         try {
             responseBodyJson = JSON.parse(responseBodyText);
         } catch (parseError) {
             const message = parseError instanceof Error ? parseError.message : String(parseError);
             console.error(`[${validSlug}] Failed to parse JSON response from ${endpoint.url}: ${message}. Body: ${responseBodyText.substring(0, 200)}...`);
-            continue; // Try next endpoint
+            continue;
         }
 
         console.log(`[${validSlug}] <-- Success from ${endpoint.url} (Status: ${response.status}, Response: ${responseBodyText.substring(0, 200)}${responseBodyText.length > 200 ? '...' : ''})`);
 
-        // Return the successful response (re-stringify the parsed JSON)
         return new Response(JSON.stringify(responseBodyJson), {
           status: response.status, // Use original status
           // Copy relevant headers from upstream? Be selective.
           headers: { 'Content-Type': 'application/json' } // Ensure correct content type
         });
       } else {
-        // Log non-OK response but continue trying others
         console.warn(`[${validSlug}] Failed RPC ${endpoint.url}: Status ${response.status}, Body: ${responseBodyText.substring(0, 100)}...`);
       }
     } catch (error) {
-        clearTimeout(timeoutId); // Clear timeout on error
+        clearTimeout(timeoutId);
         const errorMessage = error instanceof Error ? error.message : String(error);
 
         if (error instanceof Error && error.name === 'AbortError') {
@@ -170,11 +156,9 @@ export async function handleRpcRequest(req: Request, info: Deno.ServeHandlerInfo
             // outcome remains 'network_error'
         }
 
-        // Continue to the next endpoint
     }
-  } // --- End Upstream Forwarding Loop ---
+  }
 
-  // If loop finishes, all endpoints failed
   console.error(`[${validSlug}] <-- All upstream RPCs failed.`);
 
   return new Response(`Bad Gateway: All configured RPC endpoints for network '${validSlug}' failed.`, { status: 502 });
