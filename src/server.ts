@@ -25,6 +25,11 @@ export function startServer(appConfig: AppConfig): void {
       });
     }
 
+    // handle /health endpoint for health checks
+    if (req.method === "GET" && new URL(req.url).pathname === "/health") {
+      return new Response("OK", { status: 200, headers: { "Content-Type": "text/plain" } });
+    }
+
     const response = await handleRpcRequest(req, info, appConfig);
 
     response.headers.set("Access-Control-Allow-Origin", "*");
