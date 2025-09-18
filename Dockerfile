@@ -1,5 +1,5 @@
 # Use the official Deno image
-FROM denoland/deno:latest
+FROM denoland/deno:2.5.1
 
 # Set the working directory
 WORKDIR /app
@@ -20,19 +20,12 @@ ENV PUBLIC_RATE_LIMIT_ENABLED=$PUBLIC_RATE_LIMIT_ENABLED
 ENV PUBLIC_RATE_LIMIT_RPM=$PUBLIC_RATE_LIMIT_RPM
 ENV PROMETHEUS_URL=$PROMETHEUS_URL
 
-# Copy project files into the container
-# Copy deno.json and deno.lock first to leverage Docker cache for dependencies
-COPY deno.json deno.lock* ./ 
-# Cache dependencies based on lock file (if it exists)
-# Using main.ts ensures all imports are covered
-RUN deno cache main.ts --lock=deno.lock --lock-write || deno cache main.ts
-
-# Copy the rest of the application code
+# Copy the application code
 COPY . .
 
-# Re-run cache in case new imports were added in other files
-# This might be redundant if main.ts covers all, but safe
-RUN deno cache main.ts --lock=deno.lock --lock-write || deno cache main.ts
+# Cache dependencies based on lock file (if it exists)
+# Using main.ts ensures all imports are covered
+RUN deno cache main.ts --frozen
 
 # Expose the port the application listens on
 EXPOSE 8000

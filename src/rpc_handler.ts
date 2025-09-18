@@ -135,6 +135,13 @@ export async function handleRpcRequest(req: Request, info: Deno.ServeHandlerInfo
             continue;
         }
 
+        // catch "error" field within a 200 OK response
+        if (responseBodyJson && typeof responseBodyJson === 'object' && 'error' in responseBodyJson) {
+          console.warn(`[${validSlug}] RPC ${endpoint.url} returned error in response body: ${JSON.stringify(responseBodyJson.error).substring(0, 200)}...`);
+          // continue to next endpoint
+          continue;
+        }
+
         console.log(`[${validSlug}] <-- Success from ${endpoint.url} (Status: ${response.status}, Response: ${responseBodyText.substring(0, 200)}${responseBodyText.length > 200 ? '...' : ''})`);
 
         return new Response(JSON.stringify(responseBodyJson), {
