@@ -67,3 +67,46 @@ Send standard JSON-RPC POST requests to the appropriate network path:
 *   `http://localhost:8000/mainnet`
 *   `http://localhost:8000/sepolia`
 *   etc.
+
+## Architecture
+
+Junction is built with a modular architecture for maintainability and testability:
+
+### Core Components
+
+- **`src/auth.ts`** - Handles authentication and bypass token validation
+- **`src/routing.ts`** - URL pattern matching and network validation  
+- **`src/rpc_client.ts`** - RPC forwarding with timeout and fallback logic
+- **`src/rate_limiter.ts`** - IP-based rate limiting implementation
+- **`src/middleware.ts`** - Oak middleware for rate limiting
+- **`src/config.ts`** - Environment-based configuration loading
+
+### Server Implementations
+
+Junction supports two server implementations:
+
+1. **Oak Framework** (`src/server_oak.ts`) - Modern middleware-based approach with proper routing
+2. **Original Deno.serve** (`src/server.ts`) - Legacy implementation for compatibility
+
+By default, Junction uses the Oak-based server. To use the original implementation, set `USE_OAK_SERVER=false`.
+
+### Testing
+
+Run the test suite:
+
+```bash
+deno test --allow-net --allow-read --allow-env
+```
+
+The test suite includes:
+- Unit tests for individual components
+- Integration tests for complete request flows
+- Fallback scenario testing (success, failure, timeout cases)
+
+## Development
+
+Start in development mode with auto-reload:
+
+```bash
+deno task dev
+```
