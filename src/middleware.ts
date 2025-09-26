@@ -27,8 +27,7 @@ export function rateLimitMiddleware(rateLimitConfig: RateLimitConfig) {
       const clientIp = ctx.request.ip;
       
       if (clientIp && !checkRateLimit(clientIp, rateLimitConfig)) {
-        const networkSlug = ctx.params?.network || "unknown";
-        console.warn(`[RateLimit] IP ${clientIp} exceeded limit of ${rateLimitConfig.rpm} RPM for network ${networkSlug}.`);
+        console.warn(`[RateLimit] IP ${clientIp} exceeded limit of ${rateLimitConfig.rpm} RPM.`);
 
         ctx.response.status = 429;
         ctx.response.headers.set("Retry-After", "60");

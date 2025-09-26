@@ -1,6 +1,6 @@
-import { Context } from "@oak/oak";
+import { RouterContext } from "@oak/oak";
 import type { AppConfig } from "./config.ts";
-import { extractNetworkSlug, isNetworkConfigured } from "./routing.ts";
+import { isNetworkConfigured } from "./routing.ts";
 import { forwardWithFallback } from "./rpc_client.ts";
 
 /**
@@ -11,7 +11,7 @@ import { forwardWithFallback } from "./rpc_client.ts";
  * @returns Oak middleware function
  */
 export function createRpcHandler(appConfig: AppConfig) {
-  return async (ctx: Context) => {
+  return async (ctx: RouterContext<"/:network">) => {
     const { rpc: rpcConfig } = appConfig;
 
     // Extract network slug from URL params (Oak handles this automatically)

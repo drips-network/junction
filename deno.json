@@ -6,6 +6,7 @@
   "imports": {
     "@oak/oak": "https://deno.land/x/oak@v17.1.2/mod.ts",
     "dotenv": "https://deno.land/std@0.224.0/dotenv/mod.ts",
-    "zod": "https://deno.land/x/zod@v3.23.4/mod.ts"
+    "zod": "https://deno.land/x/zod@v3.23.4/mod.ts",
+    "std/assert": "https://deno.land/std@0.224.0/assert/mod.ts"
   }
 }

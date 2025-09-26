@@ -16,14 +16,14 @@ export interface AuthResult {
 export function authenticateRequest(
   authHeader: string | null,
   rateLimitConfig: RateLimitConfig,
-  remoteAddr: Deno.NetAddr
+  remoteAddr: Deno.Addr,
 ): AuthResult {
   let isTrusted = false;
   let clientIp: string | undefined;
 
   // Extract client IP for rate limiting
   if (remoteAddr.transport === "tcp" || remoteAddr.transport === "udp") {
-    clientIp = remoteAddr.hostname;
+    clientIp = (remoteAddr as Deno.NetAddr).hostname;
   }
 
   // Check for bypass token authentication

@@ -43,7 +43,8 @@ Deno.test("Integration - should handle valid RPC request with authentication", a
       transport: "tcp",
       hostname: "192.168.1.100",
       port: 12345
-    }
+    },
+    completed: Promise.resolve()
   };
 
   const response = await handleRpcRequest(request, mockInfo, appConfig);
@@ -91,7 +92,8 @@ Deno.test("Integration - should apply rate limiting for public requests", async 
       transport: "tcp",
       hostname: "192.168.1.100",
       port: 12345
-    }
+    },
+    completed: Promise.resolve()
   };
 
   // First request should pass
@@ -134,7 +136,8 @@ Deno.test("Integration - should handle unknown network", async () => {
       transport: "tcp",
       hostname: "192.168.1.100",
       port: 12345
-    }
+    },
+    completed: Promise.resolve()
   };
 
   const response = await handleRpcRequest(request, mockInfo, appConfig);
@@ -174,7 +177,8 @@ Deno.test("Integration - should handle invalid JSON in request", async () => {
       transport: "tcp",
       hostname: "192.168.1.100",
       port: 12345
-    }
+    },
+    completed: Promise.resolve()
   };
 
   const response = await handleRpcRequest(request, mockInfo, appConfig);

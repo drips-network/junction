@@ -1,4 +1,4 @@
-import { assertEquals, assertExists } from "https://deno.land/std@0.224.0/assert/mod.ts";
+import { assertEquals, assertExists } from 'std/assert';
 import { forwardToRpcEndpoint, forwardWithFallback } from "../src/rpc_client.ts";
 
 // Mock RPC server setup for testing
@@ -34,18 +34,16 @@ function startMockRpcServer(behavior: "success" | "error" | "timeout" | "invalid
           
         case "timeout":
           // Never respond to simulate timeout
-          await new Promise(() => {});
-          break;
+          return new Promise(() => {});
           
         case "invalid-json":
           return new Response("invalid json response", {
             status: 200,
             headers: { "Content-Type": "text/plain" }
           });
-          
-        default:
-          return new Response("Internal Server Error", { status: 500 });
       }
+      
+      return new Response("Internal Server Error", { status: 500 });
     });
     
     resolve({ 

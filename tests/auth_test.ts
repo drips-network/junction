@@ -78,10 +78,9 @@ Deno.test("Auth - should handle non-TCP transport", () => {
     bypassToken: "valid-secret-token"
   };
 
-  const mockRemoteAddr: Deno.NetAddr = {
+  const mockRemoteAddr: Deno.UnixAddr = {
     transport: "unix",
-    hostname: "",
-    port: 0
+    path: "/tmp/socket"
   };
 
   const result = authenticateRequest(
