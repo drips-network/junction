@@ -1,5 +1,5 @@
 import { loadAppConfig } from "./src/config.ts";
-import { startServer } from "./src/server.ts";
+import { startServer } from "./src/server_oak.ts";
 
 
 if (import.meta.main) {
