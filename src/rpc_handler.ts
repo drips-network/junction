@@ -97,7 +97,7 @@ export async function handleRpcRequest(req: Request, info: Deno.ServeHandlerInfo
   console.log(`[${validSlug}] ${isTrusted ? '[Trusted]' : '[Public]'} --> Method: ${method}, ID: ${id}`);
 
   const requestBodyString = JSON.stringify(requestBody);
-  console.log(`[${validSlug}] Request Body: ${requestBodyString.substring(0, 200)}${requestBodyString.length > 200 ? '...' : ''}`);
+  console.log(`[${validSlug}] Request Body: ${requestBodyString}`);
 
   let lastErrorResponse: { status: number; body: string } | null = null;
 
