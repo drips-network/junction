@@ -67,3 +67,9 @@ Send standard JSON-RPC POST requests to the appropriate network path:
 *   `http://localhost:8000/mainnet`
 *   `http://localhost:8000/sepolia`
 *   etc.
+
+## Joke Corner 🤣
+
+Why did the RPC proxy go to therapy?
+
+Because it had too many layers to work through! 😄
